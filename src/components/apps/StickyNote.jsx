@@ -49,7 +49,7 @@ export default function StickyNote() {
         </a>
 
         <a
-          href="https://github.com/saltyip"
+          href="https://github.com/oosleepy"
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-3 group"
@@ -59,7 +59,7 @@ export default function StickyNote() {
           </div>
           <div>
             <div className="text-[10px] font-semibold uppercase tracking-wider opacity-50">GitHub</div>
-            <div className="text-sm font-semibold leading-tight underline underline-offset-2">github.com/saltyip</div>
+            <div className="text-sm font-semibold leading-tight underline underline-offset-2">github.com/oosleepy</div>
           </div>
         </a>
 
