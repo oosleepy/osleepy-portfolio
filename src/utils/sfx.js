@@ -94,3 +94,37 @@ export const playBootHum = () => {
   osc2.start(startTime);
   osc2.stop(startTime + 1.5);
 };
+
+export const playGlitch = () => {
+  if (!audioCtx || audioCtx.state === 'suspended') return;
+  const bufferSize = audioCtx.sampleRate * 0.2; // 200ms
+  const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < bufferSize; i++) {
+    data[i] = (Math.random() * 2 - 1) * (i % 10 < 5 ? 1 : 0.2); // distorted noise
+  }
+  const noise = audioCtx.createBufferSource();
+  noise.buffer = buffer;
+  const gain = audioCtx.createGain();
+  gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+  noise.connect(gain);
+  gain.connect(audioCtx.destination);
+  noise.start();
+};
+
+export const playPanic = () => {
+  if (!audioCtx || audioCtx.state === 'suspended') return;
+  const startTime = audioCtx.currentTime;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = 'sawtooth';
+  osc.frequency.setValueAtTime(50, startTime);
+  osc.frequency.exponentialRampToValueAtTime(10, startTime + 2);
+  gain.gain.setValueAtTime(0.4, startTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, startTime + 2);
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start(startTime);
+  osc.stop(startTime + 2);
+};

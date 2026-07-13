@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
+// eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
 
 const TIPS = [
@@ -43,25 +44,6 @@ export default function NotificationToast() {
     };
   }, [hasSeenTips]);
 
-  // Handle auto-dismissal when a tip becomes visible
-  useEffect(() => {
-    if (isVisible && currentTipIndex !== -1) {
-      if (autoDismissTimerRef.current) {
-        clearTimeout(autoDismissTimerRef.current);
-      }
-
-      autoDismissTimerRef.current = setTimeout(() => {
-        handleDismiss();
-      }, 5000);
-    }
-
-    return () => {
-      if (autoDismissTimerRef.current) {
-        clearTimeout(autoDismissTimerRef.current);
-      }
-    };
-  }, [isVisible, currentTipIndex]);
-
   const handleDismiss = () => {
     setIsVisible(false);
 
@@ -83,6 +65,25 @@ export default function NotificationToast() {
       }, 8000);
     }
   };
+
+  // Handle auto-dismissal when a tip becomes visible
+  useEffect(() => {
+    if (isVisible && currentTipIndex !== -1) {
+      if (autoDismissTimerRef.current) {
+        clearTimeout(autoDismissTimerRef.current);
+      }
+
+      autoDismissTimerRef.current = setTimeout(() => {
+        handleDismiss();
+      }, 5000);
+    }
+
+    return () => {
+      if (autoDismissTimerRef.current) {
+        clearTimeout(autoDismissTimerRef.current);
+      }
+    };
+  }, [isVisible, currentTipIndex]);
 
   if (hasSeenTips || currentTipIndex === -1) {
     return null;

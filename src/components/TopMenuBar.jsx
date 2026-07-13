@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Wifi, BatteryFull, Search } from 'lucide-react';
+import { Wifi, BatteryFull, Search, Power } from 'lucide-react';
 
 export default function TopMenuBar() {
   const [time, setTime] = useState(new Date());
@@ -26,9 +26,19 @@ export default function TopMenuBar() {
         <Search size={14} className="cursor-pointer hover:text-mauve transition-colors" />
         <Wifi size={14} className="cursor-pointer hover:text-mauve transition-colors" />
         <BatteryFull size={14} className="cursor-pointer hover:text-mauve transition-colors" />
-        <span className="cursor-pointer">
+        <span className="cursor-pointer font-mono font-bold tracking-tight">
           {time.toLocaleTimeString([], { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
         </span>
+        <div 
+          className="flex items-center justify-center bg-[#f38ba8]/10 border border-[#f38ba8]/30 hover:bg-[#f38ba8]/20 hover:border-[#f38ba8]/60 rounded-md px-2 py-0.5 ml-2 cursor-pointer transition-all duration-300 hover:scale-105 group shadow-[0_0_8px_rgba(243,139,168,0.2)] hover:shadow-[0_0_15px_rgba(243,139,168,0.5)]"
+          onClick={() => window.dispatchEvent(new CustomEvent('osleepy:request_shutdown'))}
+          title="Shutdown"
+        >
+          <Power 
+            size={13} 
+            className="text-[#f38ba8] group-hover:text-[#ff99b3] drop-shadow-[0_0_4px_rgba(243,139,168,0.8)] group-hover:animate-pulse" 
+          />
+        </div>
       </div>
     </div>
   );

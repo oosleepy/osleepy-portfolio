@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from 'react';
+import { playKeypress } from '../utils/sfx';
 
 const BOOT_LINES = [
-  { time: '0.000000', status: 'info', text: 'Linux version 6.6.10-arch1-1 (osleepy@arch)' },
-  { time: '0.021034', status: 'ok', text: 'x86/cpu: SGX disabled by BIOS.' },
-  { time: '0.104231', status: 'warn', text: 'ACPI: BIOS Error (bug): Could not resolve symbol [\_TZ.ETMD]' },
-  { time: '0.420112', status: 'starting', text: 'loading kernel modules...' },
-  { time: '0.621000', status: 'ok', text: 'udev initialized' },
-  { time: '0.812313', status: 'starting', text: 'mounting filesystems...' },
-  { time: '0.999120', status: 'ok', text: 'tmpfs ready' },
+  { time: '0.000000', status: 'info', text: 'Multiverse OS v1.0.4-c137 (osleepy@arch)' },
+  { time: '0.021034', status: 'ok', text: 'Central Finite Curve: Bypassed.' },
+  { time: '0.104231', status: 'warn', text: 'GRAVITY_FALLS_API: Weirdness wave detected in Sector 8' },
+  { time: '0.420112', status: 'starting', text: 'calibrating portal fluid mechanics...' },
+  { time: '0.621000', status: 'ok', text: 'portal gun initialized' },
+  { time: '0.812313', status: 'starting', text: 'mounting multidimensional filesystems...' },
+  { time: '0.999120', status: 'ok', text: 'tmpfs/dimension_35 ready' },
   { time: '1.102341', status: 'starting', text: 'spawning sleep daemons...' },
   { time: '1.450122', status: 'ok', text: 'snooze.service active' },
-  { time: '1.710293', status: 'starting', text: 'initializing hardware...' },
-  { time: '1.923412', status: 'ok', text: 'cpu cores ready' },
+  { time: '1.710293', status: 'starting', text: 'initializing quantum hardware...' },
+  { time: '1.923412', status: 'warn', text: 'CPU: Temporal desync detected. Correcting...' },
   { time: '2.102451', status: 'starting', text: 'loading display drivers...' },
   { time: '2.402123', status: 'ok', text: 'drm configured' },
   { time: '2.610214', status: 'starting', text: 'waking display manager...' },
-  { time: '2.842104', status: 'ok', text: 'booting into desktop...' },
+  { time: '2.842104', status: 'ok', text: 'booting into reality...' },
 ];
 
 export default function BootScreen({ onComplete, embedded = false, start = true }) {
@@ -25,6 +26,7 @@ export default function BootScreen({ onComplete, embedded = false, start = true 
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
     if (!start) return;
     
@@ -33,6 +35,7 @@ export default function BootScreen({ onComplete, embedded = false, start = true 
       const delay = Math.random() > 0.8 ? 400 : 120 + Math.random() * 100;
       timer = setTimeout(() => {
         setStep(s => s + 1);
+        playKeypress(); // acts like a mechanical hard drive clicking
       }, delay);
     } else if (step === BOOT_LINES.length && !isDone) {
       // Pause before pushing the done line
@@ -61,7 +64,7 @@ export default function BootScreen({ onComplete, embedded = false, start = true 
     <div
       className={`${embedded ? 'relative w-full h-full overflow-hidden' : 'fixed inset-0'} z-50 flex flex-col items-center justify-center pointer-events-none`}
       style={{
-        backgroundColor: embedded ? 'transparent' : '#1e1e2e',
+        backgroundColor: 'transparent',
         opacity: fadingOut ? 0 : (mounted ? 1 : 0),
         transition: fadingOut ? 'opacity 0.5s ease-out' : 'opacity 0.4s ease-out',
         fontFamily: "'JetBrains Mono', monospace"
@@ -73,28 +76,41 @@ export default function BootScreen({ onComplete, embedded = false, start = true 
             0%, 100% { opacity: 1; }
             50% { opacity: 0; }
           }
+          @keyframes glitch-title {
+            0% { transform: translate(0); text-shadow: 0 0 10px rgba(203,166,247,0.3); }
+            2% { transform: translate(-2px, 1px); text-shadow: -2px 0 red, 2px 0 cyan; }
+            4% { transform: translate(2px, -1px); text-shadow: -2px 0 red, 2px 0 cyan; }
+            6% { transform: translate(0); text-shadow: 0 0 10px rgba(203,166,247,0.3); }
+            100% { transform: translate(0); text-shadow: 0 0 10px rgba(203,166,247,0.3); }
+          }
         `}
       </style>
+      
+      {/* HUD Corners */}
+      <div className="absolute top-4 right-4 text-[9px] font-mono text-[#f9e2af] opacity-50 tracking-widest">DIM: C-137</div>
+      <div className="absolute bottom-4 left-4 text-[9px] font-mono text-[#f38ba8] opacity-50 tracking-widest">MEM: 0xDEADBEEF</div>
       
       <div 
         className="flex flex-col items-center justify-center w-full h-full"
         style={{ transform: embedded ? 'scale(0.75)' : 'none', transformOrigin: 'center center' }}
       >
         {/* OS Branding */}
-        <div className="mb-10 text-center flex flex-col items-center">
-          <pre className="text-[#cba6f7] font-bold text-xs leading-[1.2] mb-4 text-left drop-shadow-[0_0_8px_rgba(203,166,247,0.4)]">
-{`      |\\__/,|   (\`\\
-    _.|o o  |_   ) )
--(((---(((--------`}
+        <div className="mb-8 text-center flex flex-col items-center">
+          <pre className="text-[#f9e2af] font-bold text-xs leading-[1.2] mb-3 text-center drop-shadow-[0_0_8px_rgba(249,226,175,0.4)]">
+{`    /\\    
+   /  \\   
+  / 👁  \\  
+ /______\\ 
+//  |   \\\\`}
           </pre>
           <h1
             className="text-3xl font-bold mb-1 tracking-[0.2em]"
-            style={{ color: '#cba6f7', textTransform: 'lowercase', textShadow: '0 0 10px rgba(203,166,247,0.3)' }}
+            style={{ color: '#cba6f7', textTransform: 'lowercase', animation: 'glitch-title 4s infinite' }}
           >
             osleepy
           </h1>
           <p style={{ color: '#a6adc8', fontSize: '11px', letterSpacing: '0.1em' }}>
-            based on arch · always half asleep
+            based on arch · multiversal engineering · half asleep
           </p>
         </div>
 

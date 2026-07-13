@@ -5,7 +5,7 @@ const SEQUENCE = [
   { type: 'input', prompt: 'shaarav@osleepy:~$ ', command: 'whoami' },
   { type: 'output', text: 'shaarav' },
   { type: 'input', prompt: 'shaarav@osleepy:~$ ', command: 'cat about.txt' },
-  { type: 'output', text: 'Name:  shaarav\nRole:  backend developer\nOS:    osleepy\nStack: React, Node, Rust, K8s' }
+  { type: 'output', text: 'Name:  shaarav\nRole:  backend engineer\nOS:    osleepy\nStack: Go, Node.js, PostgreSQL, Redis' }
 ];
 
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -27,15 +27,14 @@ const NeofetchOutput = () => (
       <div className="text-subtext0">---------------</div>
       <div className="grid grid-cols-[80px_1fr] gap-x-2 mt-1">
         <span className="text-mauve font-bold">OS</span><span className="text-text">osleepy</span>
-        <span className="text-mauve font-bold">Host</span><span className="text-text">portfolio v1.0</span>
-        <span className="text-mauve font-bold">Shell</span><span className="text-text">zsh</span>
+        <span className="text-mauve font-bold">Host</span><span className="text-text">portfolio</span>
+        <span className="text-mauve font-bold">Shell</span><span className="text-text">fish</span>
         <span className="text-mauve font-bold">Editor</span><span className="text-text">neovim / lazyvim</span>
         <span className="text-mauve font-bold">Role</span><span className="text-text">backend developer</span>
-        <span className="text-mauve font-bold">Stack</span><span className="text-text">node.js, postgresql</span>
-        <span /> <span className="text-text">redis, bullmq</span>
-        <span className="text-mauve font-bold">GitHub</span><span className="text-text">github.com/saltyip</span>
+        <span className="text-mauve font-bold">Stack</span><span className="text-text">go,node.js,postgresql,redis</span>
+        <span className="text-mauve font-bold">GitHub</span><span className="text-text">github.com/oosleepy</span>
         <span className="text-mauve font-bold">LinkedIn</span><span className="text-text">in/shaaravsh</span>
-        <span className="text-mauve font-bold">Uptime</span><span className="text-text">20 years and counting</span>
+        <span className="text-mauve font-bold">Uptime</span><span className="text-text">19 years and counting</span>
       </div>
       <div className="flex gap-1 mt-3">
         {['#1e1e2e', '#f38ba8', '#a6e3a1', '#f9e2af', '#89b4fa', '#cba6f7', '#cdd6f4', '#fab387'].map((c, i) => (
@@ -75,10 +74,10 @@ const HelpOutput = () => {
 const AboutOutput = () => {
   const info = [
     { key: 'Name:', val: 'shaarav' },
-    { key: 'Education:', val: '2nd year CS student (B.Tech 2024–2028)' },
-    { key: 'Focus:', val: 'Backend-focused: Node, PostgreSQL, Redis, BullMQ' },
-    { key: 'Currently:', val: 'Building production-grade systems' },
-    { key: 'Interests:', val: 'AppSec, Distributed Systems' },
+    { key: 'Education:', val: '3rd year CS student (B.Tech 2024–2028)' },
+    { key: 'Focus:', val: 'Backend: Go, Node.js, PostgreSQL, Redis' },
+    { key: 'Currently:', val: 'Transitioning to Go, building concurrent systems' },
+    { key: 'Interests:', val: 'Cybersecurity, AppSec, Linux Systems' },
     { key: 'Avoid:', val: 'Tutorial projects' }
   ];
 
@@ -96,8 +95,9 @@ const AboutOutput = () => {
 
 const ContactOutput = () => {
   const contacts = [
-    { key: 'GitHub:', val: 'github.com/saltyip', url: 'https://github.com/saltyip' },
-    { key: 'LinkedIn:', val: 'linkedin.com/in/shaaravsh', url: 'https://www.linkedin.com/in/shaaravs-sh/' },
+    { key: 'GitHub:', val: 'github.com/oosleepy', url: 'https://github.com/oosleepy' },
+    { key: 'LinkedIn:', val: 'linkedin.com/in/shaaravsh', url: 'https://www.linkedin.com/in/shaaravsh' },
+    { key: 'Website:', val: 'shaarav.dev', url: 'https://shaarav.dev' },
   ];
 
   return (
@@ -149,22 +149,42 @@ const TodoOutput = () => {
   );
 }
 
-const DoomOutput = () => (
-  <div className="mt-2 mb-2 space-y-1 font-mono text-xs leading-relaxed">
-    <div className="text-red-400 font-bold">$ executing doom.sh as root...</div>
-    <div className="text-subtext1">[sudo] password for shaarav: <span className="opacity-0">••••••••</span></div>
-    <div className="text-green font-bold mt-1">RICK: Morty, I've been trapped in this portfolio for 3 MONTHS.</div>
-    <div className="text-green">RICK: It's got glassmorphism, BullMQ workers AND a neofetch... I respect it.</div>
-    <div className="text-green">RICK: But it's still a browser tab. I'm a genius. I'm OUT. *burp*</div>
-    <div className="text-yellow font-bold mt-2">BILL: Hahahaha! A new puppet to play with!</div>
-    <div className="text-yellow">BILL: I've watched a MILLION dimensions fall, kid. Yours has Redis.</div>
-    <div className="text-yellow">BILL: That's... actually somewhat impressive for a 2nd year.</div>
-    <div className="text-yellow font-bold">BILL: BUT THE WEIRDNESS WAVE IS COMING FOR YOU ANYWAY.</div>
-    <div className="text-red-400 font-bold mt-2">[ INITIATING REALITY COLLAPSE... ]</div>
-    <div className="text-red-400">[ UNMOUNTING FILESYSTEM... ]</div>
-    <div className="text-red-400">[ CORE DUMP: 0xDEADBEEF ]</div>
-  </div>
-);
+const DoomOutput = () => {
+  const [lines, setLines] = useState(0);
+
+  useEffect(() => {
+    let active = true;
+    const run = async () => {
+      for (let i = 1; i <= 12; i++) {
+        if (!active) return;
+        setLines(i);
+        let delay = 150;
+        if (i === 1) delay = 400; 
+        if (i > 9) delay = 50; 
+        await new Promise(r => setTimeout(r, delay));
+      }
+    };
+    run();
+    return () => { active = false; };
+  }, []);
+
+  return (
+    <div className="mt-2 mb-2 space-y-1 font-mono text-xs leading-relaxed">
+      {lines >= 1 && <div className="text-red-400 font-bold">$ executing doom.sh as root...</div>}
+      {lines >= 2 && <div className="text-subtext1">[sudo] password for shaarav: <span className="opacity-0">••••••••</span></div>}
+      {lines >= 3 && <div className="text-green font-bold mt-1">RICK: Morty, I've been trapped in this portfolio for 3 MONTHS.</div>}
+      {lines >= 4 && <div className="text-green">RICK: It's got glassmorphism, BullMQ workers AND a neofetch... I respect it.</div>}
+      {lines >= 5 && <div className="text-green">RICK: But it's still a browser tab. I'm a genius. I'm OUT. *burp*</div>}
+      {lines >= 6 && <div className="text-yellow font-bold mt-2">BILL: Hahahaha! A new puppet to play with!</div>}
+      {lines >= 7 && <div className="text-yellow">BILL: I've watched a MILLION dimensions fall, kid. Yours has Redis.</div>}
+      {lines >= 8 && <div className="text-yellow">BILL: That's... actually somewhat impressive for a 3rd year.</div>}
+      {lines >= 9 && <div className="text-yellow font-bold">BILL: BUT THE WEIRDNESS WAVE IS COMING FOR YOU ANYWAY.</div>}
+      {lines >= 10 && <div className="text-red-400 font-bold mt-2">[ INITIATING REALITY COLLAPSE... ]</div>}
+      {lines >= 11 && <div className="text-red-400">[ UNMOUNTING FILESYSTEM... ]</div>}
+      {lines >= 12 && <div className="text-red-400">[ CORE DUMP: 0xDEADBEEF ]</div>}
+    </div>
+  );
+};
 
 
 export default function Terminal() {

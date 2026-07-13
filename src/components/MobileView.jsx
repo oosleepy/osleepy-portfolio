@@ -13,11 +13,11 @@ export default function MobileView() {
         <div>
           <span className="text-[10px] uppercase tracking-[0.2em] text-mauve font-bold">portfolio</span>
           <h1 className="text-3xl font-extrabold tracking-tight mt-1">shaarav</h1>
-          <p className="text-sm text-subtext0 mt-0.5">2nd year CS @ B.Tech (2024–2028)</p>
+          <p className="text-sm text-subtext0 mt-0.5">3rd year CS @ B.Tech (2024–2028)</p>
         </div>
 
         <div className="flex flex-wrap gap-1.5">
-          {["Node.js", "PostgreSQL", "Redis", "BullMQ", "AppSec", "Distributed Systems"].map(t => (
+          {["Go", "Node.js", "PostgreSQL", "Redis", "AppSec", "Distributed Systems"].map(t => (
             <span key={t} className="bg-surface0 border border-surface1 px-2 py-0.5 rounded-lg text-xs font-semibold text-text/90">
               {t}
             </span>
@@ -144,7 +144,7 @@ export default function MobileView() {
           </a>
 
           <a
-            href="https://github.com/saltyip"
+            href="https://github.com/oosleepy"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-3 p-3 rounded-xl bg-surface0/60 border border-surface1 hover:border-mauve transition-colors"
@@ -154,7 +154,7 @@ export default function MobileView() {
             </div>
             <div>
               <div className="text-[9px] uppercase tracking-wider text-subtext0 font-semibold">GitHub</div>
-              <div className="text-xs font-bold text-text underline">github.com/saltyip</div>
+              <div className="text-xs font-bold text-text underline">github.com/oosleepy</div>
             </div>
           </a>
 
@@ -170,6 +170,21 @@ export default function MobileView() {
             <div>
               <div className="text-[9px] uppercase tracking-wider text-subtext0 font-semibold">LinkedIn</div>
               <div className="text-xs font-bold text-text underline">linkedin.com/in/shaaravsh</div>
+            </div>
+          </a>
+
+          <a
+            href="https://shaarav.dev"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-3 p-3 rounded-xl bg-surface0/60 border border-surface1 hover:border-mauve transition-colors"
+          >
+            <div className="w-8 h-8 rounded-lg bg-mauve/15 flex items-center justify-center text-mauve shrink-0">
+              <ExternalLink size={14} />
+            </div>
+            <div>
+              <div className="text-[9px] uppercase tracking-wider text-subtext0 font-semibold">Website</div>
+              <div className="text-xs font-bold text-text underline">shaarav.dev</div>
             </div>
           </a>
 

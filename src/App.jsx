@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import TopMenuBar from './components/TopMenuBar';
 import Dock from './components/Dock';
 import WindowFrame from './components/WindowFrame';
@@ -10,7 +11,7 @@ import TextEditor from './components/apps/TextEditor';
 import WakeUpSequence from './components/WakeUpSequence';
 import BootScreen from './components/BootScreen';
 import MobileView from './components/MobileView';
-import { playClick } from './utils/sfx';
+import { playClick, playGlitch, playPanic } from './utils/sfx';
 
 import NotificationToast from './components/NotificationToast';
 
@@ -28,6 +29,31 @@ export default function App() {
   const [appState, setAppState] = useState('wakeup'); // wakeup -> desktop
   const [isDoomed, setIsDoomed] = useState(false);
   const [doomStage, setDoomStage] = useState(0);
+  const [showShutdownModal, setShowShutdownModal] = useState(false);
+
+  // Pre-calculate random properties for multiversal dust particles
+  const [dustParticles] = useState(() => {
+    return Array.from({ length: 25 }).map(() => ({
+      left: `${Math.random() * 100}%`,
+      top: `${Math.random() * 100}%`,
+      size: `${Math.random() * 3 + 1}px`,
+      color: ['#a6e3a1', '#89b4fa', '#cba6f7'][Math.floor(Math.random() * 3)],
+      duration: `${Math.random() * 5 + 4}s`,
+      delay: `${Math.random() * 5}s`
+    }));
+  });
+
+  const [cryptograms] = useState(() => {
+    const symbols = ['Δ', '👁', 'Σ', 'Ω', 'λ', '⚚', '∇', '∞', '⊗', '⨁', '⏣', '⎈'];
+    return Array.from({ length: 30 }).map(() => ({
+      left: `${Math.random() * 100}%`,
+      top: `${Math.random() * 100}%`,
+      size: `${Math.random() * 40 + 20}px`,
+      duration: `${Math.random() * 1.5 + 1.5}s`,
+      delay: `${Math.random() * 2}s`,
+      symbol: symbols[Math.floor(Math.random() * symbols.length)]
+    }));
+  });
 
   useEffect(() => {
     const checkMobile = () => {
@@ -43,12 +69,20 @@ export default function App() {
     const handleDoom = () => {
       setIsDoomed(true);
       setDoomStage(1);
-      setTimeout(() => setDoomStage(2), 3000);  // screen glitch + Bill triangle
-      setTimeout(() => setDoomStage(3), 5500);  // intensify
-      setTimeout(() => setDoomStage(4), 7500);  // black screen kernel panic
+      setTimeout(() => { setDoomStage(2); playGlitch(); }, 3000);  // screen glitch + Bill triangle
+      setTimeout(() => { setDoomStage(3); playGlitch(); }, 5500);  // intensify
+      setTimeout(() => { setDoomStage(4); }, 7500);  // tv off
+      setTimeout(() => { setDoomStage(5); playPanic(); }, 8100);  // kernel panic
+    };
+    const handleShutdownRequest = () => {
+      setShowShutdownModal(true);
     };
     window.addEventListener('osleepy:doom', handleDoom);
-    return () => window.removeEventListener('osleepy:doom', handleDoom);
+    window.addEventListener('osleepy:request_shutdown', handleShutdownRequest);
+    return () => {
+      window.removeEventListener('osleepy:doom', handleDoom);
+      window.removeEventListener('osleepy:request_shutdown', handleShutdownRequest);
+    };
   }, []);
   const [openWindows, setOpenWindows] = useState({
     terminal: false,
@@ -104,69 +138,148 @@ export default function App() {
     <>
       {isDoomed && (
         <style>{`
-          @keyframes violent-shake {
-            0% { transform: translate(2px, 1px) rotate(0deg); }
-            10% { transform: translate(-1px, -2px) rotate(-1deg); }
-            20% { transform: translate(-3px, 0px) rotate(1deg); }
-            30% { transform: translate(0px, 2px) rotate(0deg); }
-            40% { transform: translate(1px, -1px) rotate(1deg); }
-            50% { transform: translate(-1px, 2px) rotate(-1deg); }
-            60% { transform: translate(-3px, 1px) rotate(0deg); }
-            70% { transform: translate(2px, 1px) rotate(-1deg); }
-            80% { transform: translate(-1px, -1px) rotate(1deg); }
-            90% { transform: translate(2px, 2px) rotate(0deg); }
-            100% { transform: translate(1px, -2px) rotate(-1deg); }
+          @keyframes cinematic-shake {
+            0% { transform: translate(0px, 0px) rotate(0deg); }
+            20% { transform: translate(-1px, 2px) rotate(-0.2deg); }
+            40% { transform: translate(1px, -1px) rotate(0.2deg); }
+            60% { transform: translate(-2px, 0px) rotate(-0.1deg); }
+            80% { transform: translate(1px, 1px) rotate(0.1deg); }
+            100% { transform: translate(0px, 0px) rotate(0deg); }
           }
-          .animate-shake {
-            animation: violent-shake 0.3s infinite;
+          @keyframes tv-off {
+            0% { transform: scale(1, 1); opacity: 1; filter: brightness(1); }
+            40% { transform: scale(1, 0.01); opacity: 1; filter: brightness(3); }
+            70% { transform: scale(0, 0.01); opacity: 0.8; filter: brightness(10); }
+            100% { transform: scale(0, 0); opacity: 0; }
           }
+          @keyframes chromatic-pulse {
+            0% { filter: drop-shadow(0 0 0 rgba(255,0,0,0)); transform: scale(1); }
+            50% { filter: drop-shadow(-2px 0 8px rgba(255,0,0,0.4)) drop-shadow(2px 0 8px rgba(0,255,255,0.4)); transform: scale(1.01); }
+            100% { filter: drop-shadow(0 0 0 rgba(255,0,0,0)); transform: scale(1); }
+          }
+          .animate-shake { animation: cinematic-shake 4s ease-in-out infinite; }
+          .animate-glitch { animation: chromatic-pulse 2.5s ease-in-out infinite; }
+          .animate-tv-off { animation: tv-off 0.6s forwards cubic-bezier(0.8, 0, 1, 1); }
+          @keyframes float-cryptogram {
+            0% { transform: translateY(0) scale(1) rotate(0deg); opacity: 0; filter: blur(4px); }
+            20% { opacity: 0.8; filter: blur(0px); }
+            80% { opacity: 0.8; filter: blur(0px); }
+            100% { transform: translateY(-50px) scale(1.5) rotate(45deg); opacity: 0; filter: blur(4px); }
+          }
+          @keyframes creeping-darkness {
+            0% { box-shadow: inset 0 0 0vw 0vw rgba(0,0,0,0); }
+            100% { box-shadow: inset 0 0 40vw 40vw rgba(0,0,0,1); }
+          }
+          .animate-darkness { animation: creeping-darkness 4.5s forwards ease-in; }
           @keyframes desktopFadeIn {
-            0% { opacity: 0; filter: brightness(0); }
-            100% { opacity: 1; filter: brightness(1); }
+            0% { transform: scale(1.05); filter: blur(10px) brightness(3); opacity: 0; }
+            100% { transform: scale(1); filter: blur(0px) brightness(1); opacity: 1; }
           }
         `}</style>
       )}
 
+      {/* CRT Scanline overlay during doom */}
+      {isDoomed && doomStage < 5 && (
+        <div className="absolute inset-0 z-[9999] pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_4px,3px_100%] opacity-50 mix-blend-overlay"></div>
+      )}
+
+      {/* Creeping Darkness */}
+      {isDoomed && doomStage >= 2 && doomStage < 5 && (
+        <div className="absolute inset-0 z-[9998] pointer-events-none animate-darkness"></div>
+      )}
+
+      {/* Floating Cryptograms */}
+      {isDoomed && doomStage >= 2 && doomStage < 5 && (
+        <div className="absolute inset-0 z-[9997] pointer-events-none overflow-hidden">
+          {cryptograms.map((crypto, i) => (
+            <div 
+              key={i} 
+              className="absolute font-bold opacity-0 text-[#f38ba8]"
+              style={{
+                left: crypto.left,
+                top: crypto.top,
+                fontSize: crypto.size,
+                animation: `float-cryptogram ${crypto.duration} infinite ${crypto.delay}`,
+                textShadow: '0 0 12px #f38ba8, 0 0 24px #f38ba8'
+              }}
+            >
+              {crypto.symbol}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {doomStage >= 5 && (
+        <div className="absolute inset-0 z-[99999] bg-black text-[#cba6f7] font-mono p-8 text-[13px] whitespace-pre-wrap overflow-hidden leading-snug">
+          <div className="animate-pulse">
+{`[    0.000000] Kernel panic - not syncing: Fatal exception in interrupt
+[    0.000000] CPU: 0 PID: 1 Comm: init Not tainted 6.8.0-osleepy #1
+[    0.000000] Hardware name: Portfolio/Desktop, BIOS 1.0.0
+[    0.000000] Call Trace:
+[    0.000000]  <IRQ>
+[    0.000000]  dump_stack+0x5c/0x80
+[    0.000000]  panic+0x111/0x2b0
+[    0.000000]  do_trap+0x8a/0x100
+[    0.000000]  do_error_trap+0x65/0x80
+[    0.000000]  exc_invalid_op+0x42/0x60
+[    0.000000]  asm_exc_invalid_op+0x16/0x20
+[    0.000000] RIP: 0010:weirdmageddon_init+0x666/0x666
+[    0.000000] Code: FF FF FF FF 48 8B 05 DE AD BE EF 48 85 C0 74 05 E8 4B 3A 00 00 48 89 DF
+[    0.000000] RSP: 0018:ffffa0a680003e88 EFLAGS: 00010246
+[    0.000000] RAX: 0000000000000000 RBX: ffff8d8504000000 RCX: 0000000000000000
+[    0.000000] Kernel Offset: 0x1f000000 from 0xffffffff81000000
+[    0.000000] ---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
+[    0.000000] 
+[    0.000000] REALITY COMPROMISED. PLEASE REBOOT UNIVERSE.`}
+          </div>
+        </div>
+      )}
+
       <div className={`relative h-screen w-full overflow-hidden select-none pt-7 transition-all duration-[2000ms] ease-in-out animate-[desktopFadeIn_1.5s_ease-out]
-        ${doomStage >= 1 ? 'animate-shake' : ''}
-        ${doomStage >= 2 ? 'invert hue-rotate-180 contrast-[200%] grayscale-[0.5]' : ''}
-        ${doomStage >= 4 ? 'hidden' : ''}
+        ${doomStage >= 1 && doomStage < 4 ? 'animate-shake' : ''}
+        ${doomStage >= 2 && doomStage < 4 ? 'invert hue-rotate-180 contrast-[120%] grayscale-[0.2]' : ''}
+        ${doomStage >= 3 && doomStage < 4 ? 'animate-glitch' : ''}
+        ${doomStage === 4 ? 'animate-tv-off' : ''}
+        ${doomStage >= 5 ? 'hidden' : ''}
       `}>
         <TopMenuBar />
 
         {/* Desktop Area */}
         <div className="absolute inset-0 z-0 pt-7">
-          {/* Custom Personality Wallpaper (Static, High Performance) */}
-          <div className="absolute inset-0 z-[-2] bg-[#0a0a14] overflow-hidden pointer-events-none">
-            {/* Blueprint Grid (Tech/BH6) */}
-            <div className="absolute inset-0 bg-[linear-gradient(rgba(137,180,250,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(137,180,250,0.03)_1px,transparent_1px)] bg-[size:40px_40px]" />
-            
-            {/* Massive Portal/Zodiac Swirl (Rick & Morty / Gravity Falls) */}
-            <svg className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120vw] h-[120vw] opacity-[0.03] min-w-[800px]" viewBox="0 0 1000 1000" fill="none">
-              <circle cx="500" cy="500" r="300" stroke="#a6e3a1" strokeWidth="2" strokeDasharray="10 20" />
-              <circle cx="500" cy="500" r="400" stroke="#cba6f7" strokeWidth="1" />
-              <circle cx="500" cy="500" r="450" stroke="#f38ba8" strokeWidth="4" strokeDasharray="2 40" />
-              <path d="M 500 100 Q 600 500 500 900 Q 400 500 500 100" stroke="#89b4fa" strokeWidth="1" />
-              <path d="M 100 500 Q 500 600 900 500 Q 500 400 100 500" stroke="#89b4fa" strokeWidth="1" />
-              
-              {/* Gravity Falls Triangle */}
-              <polygon points="500,250 700,650 300,650" stroke="#f9e2af" strokeWidth="3" strokeDasharray="5 5" />
-              <circle cx="500" cy="500" r="40" stroke="#f9e2af" strokeWidth="2" />
-              
-              {/* BH6 Microbot Connections */}
-              <circle cx="300" cy="300" r="10" fill="#cdd6f4" />
-              <circle cx="700" cy="300" r="10" fill="#cdd6f4" />
-              <circle cx="300" cy="700" r="10" fill="#cdd6f4" />
-              <circle cx="700" cy="700" r="10" fill="#cdd6f4" />
-              <line x1="300" y1="300" x2="500" y2="500" stroke="#cdd6f4" strokeWidth="1" />
-              <line x1="700" y1="300" x2="500" y2="500" stroke="#cdd6f4" strokeWidth="1" />
-              <line x1="300" y1="700" x2="500" y2="500" stroke="#cdd6f4" strokeWidth="1" />
-              <line x1="700" y1="700" x2="500" y2="500" stroke="#cdd6f4" strokeWidth="1" />
+          {/* Wallpaper — Minimal Dark */}
+          <div className="absolute inset-0 z-[-2] overflow-hidden pointer-events-none" style={{ background: '#05050d' }}>
+
+            {/* Color node 1 — mauve, top-left, barely there */}
+            <div className="absolute" style={{
+              top: '-20%', left: '-15%',
+              width: '75vw', height: '75vw',
+              background: 'radial-gradient(circle, rgba(203,166,247,0.09) 0%, transparent 65%)',
+              filter: 'blur(100px)'
+            }} />
+
+            {/* Color node 2 — blue, bottom-right */}
+            <div className="absolute" style={{
+              bottom: '-25%', right: '-15%',
+              width: '70vw', height: '70vw',
+              background: 'radial-gradient(circle, rgba(137,180,250,0.07) 0%, transparent 65%)',
+              filter: 'blur(120px)'
+            }} />
+
+            {/* Film grain — the only texture */}
+            <svg className="absolute inset-0 w-full h-full" style={{ opacity: 0.15, mixBlendMode: 'soft-light' }}>
+              <filter id="dark-grain">
+                <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="4" stitchTiles="stitch" />
+                <feColorMatrix type="saturate" values="0" />
+              </filter>
+              <rect width="100%" height="100%" filter="url(#dark-grain)" />
             </svg>
-            
-            {/* Vignette border to blend it all into the dark edges */}
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_40%,#0a0a14_100%)]" />
+
+            {/* Edge vignette */}
+            <div className="absolute inset-0" style={{
+              background: 'radial-gradient(ellipse 85% 80% at 50% 45%, transparent 35%, rgba(2,2,8,0.9) 100%)'
+            }} />
           </div>
+
 
           {/* Desktop Shortcut Icons (Linux Desktop Shell Feel) */}
           <div className="absolute left-6 top-16 flex flex-col gap-5 z-0">
@@ -202,26 +315,28 @@ export default function App() {
             })}
           </div>
 
-          {Object.entries(APPS).map(([id, config]) => {
-            if (!openWindows[id] || config.isExternal) return null;
+          <AnimatePresence>
+            {Object.entries(APPS).map(([id, config]) => {
+              if (!openWindows[id] || config.isExternal) return null;
 
-            const Content = config.component;
-            return (
-              <WindowFrame
-                key={id}
-                id={id}
-                title={config.title}
-                active={activeWindow === id}
-                zIndex={windowStack.indexOf(id) + 10}
-                onFocus={() => focusWindow(id)}
-                onClose={closeWindow}
-                initialPos={config.pos}
-                defaultSize={config.size}
-              >
-                <Content />
-              </WindowFrame>
-            );
-          })}
+              const Content = config.component;
+              return (
+                <WindowFrame
+                  key={id}
+                  id={id}
+                  title={config.title}
+                  active={activeWindow === id}
+                  zIndex={windowStack.indexOf(id) + 10}
+                  onFocus={() => focusWindow(id)}
+                  onClose={closeWindow}
+                  initialPos={config.pos}
+                  defaultSize={config.size}
+                >
+                  <Content />
+                </WindowFrame>
+              );
+            })}
+          </AnimatePresence>
 
           {showDevlogIntro && (
             <WindowFrame
@@ -273,6 +388,53 @@ export default function App() {
         />
 
         <NotificationToast />
+
+        {/* Shutdown Confirmation Modal */}
+        <AnimatePresence>
+          {showShutdownModal && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm"
+            >
+              <motion.div
+                initial={{ scale: 0.95, y: 10 }}
+                animate={{ scale: 1, y: 0 }}
+                exit={{ scale: 0.95, y: 10 }}
+                className="bg-[#1e1e2e] border border-surface1 rounded-2xl p-6 shadow-2xl max-w-sm w-full mx-4 flex flex-col items-center text-center"
+              >
+                <div className="w-12 h-12 bg-red-500/10 rounded-full flex items-center justify-center mb-4 border border-red-500/20">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f38ba8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+                    <line x1="12" y1="2" x2="12" y2="12"></line>
+                  </svg>
+                </div>
+                <h3 className="text-xl font-bold text-text mb-2">Power Off System?</h3>
+                <p className="text-subtext0 text-sm mb-6 leading-relaxed">
+                  This will unmount the filesystem and initiate the shutdown sequence. Are you sure you want to proceed?
+                </p>
+                <div className="flex gap-3 justify-center w-full">
+                  <button
+                    onClick={() => setShowShutdownModal(false)}
+                    className="flex-1 py-2.5 rounded-xl font-bold text-subtext0 bg-surface0 hover:bg-surface1 border border-surface1 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowShutdownModal(false);
+                      window.dispatchEvent(new CustomEvent('osleepy:doom'));
+                    }}
+                    className="flex-1 py-2.5 rounded-xl font-bold text-[#11111b] bg-red-400 hover:bg-red-500 transition-colors shadow-lg shadow-red-500/20"
+                  >
+                    Power Off
+                  </button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {doomStage >= 2 && doomStage < 4 && (
