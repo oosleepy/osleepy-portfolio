@@ -1,6 +1,40 @@
 export const projects = [
   {
+    id: 1,
+    name: "Auction System",
+    repo: "auction",
+    tags: ["Go", "WebSockets", "Redis", "PostgreSQL", "JWT"],
+    description: "Real-time auction backend in Go handling concurrent bidding with strict correctness guarantees — load-tested to 14.5K reads/sec and 9.2K writes/sec at sub-10ms p95 latency.",
+    github: "https://github.com/oosleepy/auction",
+    hasLiveDemo: false,
+    liveDemoUrl: "",
+    hasDevlog: false,
+    devlogUrl: "https://devlog-app-beta.vercel.app/project/auction",
+    highlights: [
+      "Concurrency Safety — Per-auction mutex + meta-mutex design ensures exactly one winner under simultaneous bids; verified with go test -race and 1,000 concurrent bid trials.",
+      "Load-Tested Performance — Benchmarked with hey: ~14,500 req/sec reads, ~9,200 req/sec writes, sub-10ms p95 latency.",
+      "Real-time Updates — WebSocket-based live bid broadcasting to all connected clients (gorilla/websocket)."
+    ]
+  },
+  {
     id: 2,
+    name: "Gorest",
+    repo: "gorest",
+    tags: ["Go", "REST API"],
+    description: "A robust and scalable RESTful API built with Go, demonstrating clean architecture and best practices.",
+    github: "https://github.com/oosleepy/gorest",
+    hasLiveDemo: false,
+    liveDemoUrl: "",
+    hasDevlog: false,
+    devlogUrl: "https://devlog-app-beta.vercel.app/project/gorest",
+    highlights: [
+      "Clean Architecture: Structured for maintainability and scalability.",
+      "RESTful Design: Adheres to standard REST principles for API design.",
+      "High Performance: Leverages Go's concurrency and speed."
+    ]
+  },
+  {
+    id: 4,
     name: "JWT Redis Auth API",
     repo: "jwt-redis-auth-api",
     tags: ["Node.js", "Express", "JWT", "Redis", "REST API"],
@@ -17,7 +51,7 @@ export const projects = [
     ]
   },
   {
-    id: 3,
+    id: 5,
     name: "Email Queue Service",
     repo: "emailqueue",
     tags: ["Node.js", "Express", "BullMQ", "Redis", "PostgreSQL", "Nodemailer"],
@@ -34,7 +68,7 @@ export const projects = [
     ]
   },
   {
-    id: 5,
+    id: 7,
     name: "wallswp",
     repo: "wallpaper-swipe",
     tags: ["Go", "REST API"],
@@ -51,7 +85,7 @@ export const projects = [
     ]
   },
   {
-    id: 4,
+    id: 6,
     name: "Nudge CLI Tool",
     repo: "nudge",
     tags: ["Node.js", "Shell", "CLI", "Arch Linux"],
@@ -68,7 +102,7 @@ export const projects = [
     ]
   },
   {
-    id: 1,
+    id: 3,
     name: "DNS Resolver",
     repo: "dns-resolver",
     tags: ["Node.js", "UDP", "Networking", "DNS"],
@@ -85,7 +119,7 @@ export const projects = [
     ]
   },
   {
-    id: 6,
+    id: 8,
     name: "Dotfiles & Linux Tooling",
     repo: "dotfiles",
     tags: ["Shell", "Lua", "Python", "Neovim"],
