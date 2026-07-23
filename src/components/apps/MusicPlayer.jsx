@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, memo } from 'react';
 import { Play, Pause, SkipBack, SkipForward, Disc } from 'lucide-react';
 
 const PALETTE = {
@@ -41,7 +41,7 @@ const formatTime = (timeInSeconds) => {
   return `${m}:${s < 10 ? '0' : ''}${s}`;
 };
 
-export default function MusicPlayer() {
+function MusicPlayer() {
   const audioRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [trackIndex, setTrackIndex] = useState(0);
@@ -178,3 +178,5 @@ export default function MusicPlayer() {
     </div>
   );
 }
+
+export default memo(MusicPlayer);

@@ -1,6 +1,7 @@
+import { memo } from 'react';
 import { Mail, CodeXml, ExternalLink, Download } from 'lucide-react';
 
-export default function StickyNote() {
+function StickyNote() {
   return (
     <div
       className="h-full w-full flex flex-col p-5 gap-5 relative overflow-hidden"
@@ -89,3 +90,5 @@ export default function StickyNote() {
     </div>
   );
 }
+
+export default memo(StickyNote);

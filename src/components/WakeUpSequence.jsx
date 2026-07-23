@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import BootScreen from './BootScreen';
-import { playBootHum, playClick } from '../utils/sfx';
+import { initAudio, playBootHum, playClick } from '../utils/sfx';
 
 export default function WakeUpSequence({ onComplete }) {
   const [phase, setPhase] = useState('black');
@@ -21,7 +21,7 @@ export default function WakeUpSequence({ onComplete }) {
   useEffect(() => {
     if (phase === 'text1' || phase === 'text2') {
       const handleKey = () => {
-        playClick();
+        initAudio();
         setPhase('fadeout');
       };
       window.addEventListener('keydown', handleKey);
@@ -242,6 +242,7 @@ export default function WakeUpSequence({ onComplete }) {
         <button
           onClick={(e) => {
             e.stopPropagation();
+            initAudio();
             onComplete();
           }}
           className="fixed bottom-8 right-8 z-[10000] text-[#bac2de] hover:text-[#cba6f7] font-mono text-xs opacity-80 hover:opacity-100 transition-all cursor-pointer uppercase tracking-widest border border-[#313244] hover:border-[#cba6f7]/50 bg-[#11111b]/80 px-3 py-1.5 rounded-lg"

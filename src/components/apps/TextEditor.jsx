@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 const profileData = `{
   "engineer": {
     "name": "Shaarav",
@@ -73,7 +75,7 @@ const SyntaxHighlightedJSON = ({ jsonString }) => {
   return <code dangerouslySetInnerHTML={{ __html: html }} className="text-[#bac2de]" />;
 };
 
-export default function TextEditor() {
+function TextEditor() {
   return (
     <div className="bg-[#1e1e2e] p-6 w-full font-mono text-[14px] leading-loose antialiased overflow-hidden flex h-full">
       <div className="text-[#6c7086] pr-4 border-r border-[#313244] text-right select-none opacity-50">
@@ -87,3 +89,5 @@ export default function TextEditor() {
     </div>
   );
 }
+
+export default memo(TextEditor);

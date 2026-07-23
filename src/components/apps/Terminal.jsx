@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, memo } from 'react';
 import { playKeypress } from '../../utils/sfx';
 
 const SEQUENCE = [
@@ -187,7 +187,7 @@ const DoomOutput = () => {
 };
 
 
-export default function Terminal() {
+function Terminal() {
   const [history, setHistory] = useState([]);
   const [currentLine, setCurrentLine] = useState('');
   const [currentPrompt, setCurrentPrompt] = useState('');
@@ -352,3 +352,6 @@ export default function Terminal() {
     </div>
   );
 }
+
+const TerminalApp = memo(Terminal);
+export default TerminalApp;

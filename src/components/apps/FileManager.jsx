@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 import {
   Folder,
   ChevronRight,
@@ -11,7 +11,7 @@ import {
 
 import { projects } from "../../data/projects";
 
-export default function FileManager() {
+function FileManager() {
   const sortedProjects = [...projects].sort((a, b) => a.id - b.id);
   const [selectedProject, setSelectedProject] = useState(sortedProjects[0]);
 
@@ -19,7 +19,7 @@ export default function FileManager() {
     <div className="flex h-full w-full bg-[#1e1e2e]/40 overflow-hidden font-sans antialiased">
       {/* Left List Pane */}
       <div
-        className={`${selectedProject ? "w-[40%] border-r border-surface1" : "w-full"} h-full flex flex-col p-4 transition-all duration-300 overflow-y-auto`}
+        className={`${selectedProject ? "w-[40%] border-r border-surface1" : "w-full"} h-full flex flex-col p-4 transition-[width] duration-200 overflow-y-auto`}
       >
         <div className="flex items-center gap-2 mb-4 text-[10px] font-bold text-subtext1 uppercase tracking-widest border-b border-surface1 pb-2 shrink-0 font-mono">
           <span className="opacity-50">root</span>
@@ -134,3 +134,5 @@ export default function FileManager() {
     </div>
   );
 }
+
+export default memo(FileManager);

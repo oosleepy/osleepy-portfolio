@@ -11,7 +11,7 @@ import TextEditor from './components/apps/TextEditor';
 import WakeUpSequence from './components/WakeUpSequence';
 import BootScreen from './components/BootScreen';
 import MobileView from './components/MobileView';
-import { playClick, playGlitch, playPanic } from './utils/sfx';
+import { playClick } from './utils/sfx';
 
 import NotificationToast from './components/NotificationToast';
 
@@ -69,10 +69,10 @@ export default function App() {
     const handleDoom = () => {
       setIsDoomed(true);
       setDoomStage(1);
-      setTimeout(() => { setDoomStage(2); playGlitch(); }, 3000);  // screen glitch + Bill triangle
-      setTimeout(() => { setDoomStage(3); playGlitch(); }, 5500);  // intensify
+      setTimeout(() => { setDoomStage(2); }, 3000);  // screen glitch + Bill triangle
+      setTimeout(() => { setDoomStage(3); }, 5500);  // intensify
       setTimeout(() => { setDoomStage(4); }, 7500);  // tv off
-      setTimeout(() => { setDoomStage(5); playPanic(); }, 8100);  // kernel panic
+      setTimeout(() => { setDoomStage(5); }, 8100);  // kernel panic
     };
     const handleShutdownRequest = () => {
       setShowShutdownModal(true);
@@ -235,7 +235,7 @@ export default function App() {
         </div>
       )}
 
-      <div className={`relative h-screen w-full overflow-hidden select-none pt-7 transition-all duration-[2000ms] ease-in-out animate-[desktopFadeIn_1.5s_ease-out]
+      <div className={`relative h-screen w-full overflow-hidden select-none pt-7 transition-[filter,transform,opacity] duration-[2000ms] ease-in-out animate-[desktopFadeIn_1.5s_ease-out]
         ${doomStage >= 1 && doomStage < 4 ? 'animate-shake' : ''}
         ${doomStage >= 2 && doomStage < 4 ? 'invert hue-rotate-180 contrast-[120%] grayscale-[0.2]' : ''}
         ${doomStage >= 3 && doomStage < 4 ? 'animate-glitch' : ''}
@@ -266,9 +266,9 @@ export default function App() {
             }} />
 
             {/* Film grain — the only texture */}
-            <svg className="absolute inset-0 w-full h-full" style={{ opacity: 0.15, mixBlendMode: 'soft-light' }}>
+            <svg className="absolute inset-0 w-full h-full" style={{ opacity: 0.12, mixBlendMode: 'soft-light' }}>
               <filter id="dark-grain">
-                <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="4" stitchTiles="stitch" />
+                <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="1" stitchTiles="stitch" />
                 <feColorMatrix type="saturate" values="0" />
               </filter>
               <rect width="100%" height="100%" filter="url(#dark-grain)" />
@@ -302,7 +302,7 @@ export default function App() {
                       toggleWindow(id, true);
                     }
                   }}
-                  className="flex flex-col items-center justify-center w-24 h-28 rounded-2xl cursor-pointer bg-white/[0.02] border border-white/5 hover:bg-white/[0.08] hover:border-white/10 backdrop-blur-md active:scale-95 transition-all gap-3 group text-center select-none shadow-[0_4px_20px_rgba(0,0,0,0.15)]"
+                  className="flex flex-col items-center justify-center w-24 h-28 rounded-2xl cursor-pointer bg-white/[0.04] border border-white/5 hover:bg-white/[0.08] hover:border-white/10 active:scale-95 transition-all gap-3 group text-center select-none shadow-[0_4px_20px_rgba(0,0,0,0.15)]"
                 >
                   <div className="text-4xl flex items-center justify-center w-12 h-12 filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.4)] group-hover:-translate-y-1 group-hover:scale-110 transition-transform duration-300">
                     {config.icon}
